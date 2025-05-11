@@ -1,6 +1,6 @@
 const db = require('../db');
 const { validationResult } = require('express-validator');
-
+const { v4: uuidv4 } = require('uuid');
 const haversineDistance = (lat1, lon1, lat2, lon2) => {
   const toRad = x => x * Math.PI / 180;
   const R = 6371; // km
@@ -18,7 +18,7 @@ exports.addSchool = async (req, res) => {
 
   const { name, address, latitude, longitude } = req.body;
   try {
-    await db.execute('INSERT INTO schools (name, address, latitude, longitude) VALUES (?, ?, ?, ?)', [name, address, latitude, longitude]);
+    await db.execute('INSERT INTO schools (id,name, address, latitude, longitude) VALUES (?,?, ?, ?, ?)', [uuidv4(),name, address, latitude, longitude]);
     res.status(201).json({ message: 'School added successfully' });
   } catch (err) {
     res.status(500).json({ error: 'Database error', details: err });
